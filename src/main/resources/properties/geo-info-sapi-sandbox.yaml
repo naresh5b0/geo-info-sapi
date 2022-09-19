@@ -1,0 +1,17 @@
+https:
+  port: "8082"
+
+api:
+  auto-discovery-id: "18154445"
+  name: "geo-info-sapi"
+  version: "v1"
+  path: "/api/sys/v1/*"
+      
+ipstack:
+  host: "api.ipstack.com"
+  accesskey: "![Pb/oWhyrNlj7o7JuE12i45fSpBzCrcCvI0yqycM4Tf/pOVdlHVc0cQ==]"
+
+usgeocoder:
+  host: "usgeocoder.com"
+  path: "/api/get_info.php"
+  authkey: "![GCQz6NRY/AJ4+bChGO8UvM/RsTNQgyvTR3K1SA+l+e3/ZXy0ajN+Xg==]"    

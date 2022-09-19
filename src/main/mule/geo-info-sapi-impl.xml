@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="geo-info-sapi-impl-for-ip-addressFlow" doc:id="fdf20e7b-1107-419d-9582-cb8f64928eb0" >
+		<http:request method="GET" doc:name="IP Stack Request" doc:id="18165cef-97b2-4bb9-bf4a-b7cd04efacc7" config-ref="HTTP_IPStack_Request_configuration" path='#["/" ++ (attributes.queryParams.ipAddress default "0.0.0.0")]'>
+			<http:query-params ><![CDATA[#[%dw 2.0
+output application/java
+---
+{
+	"access_key": Mule::p('secure::ipstack.accesskey')
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+	<flow name="geo-info-sapi-impl-for-addressFlow" doc:id="bc160bad-0265-488c-84dd-e9988e551b17" >
+		<http:request method="GET" doc:name="US Geo Code" doc:id="5373f418-7ce9-40eb-91a0-636b4a088dd1" path="#[Mule::p('secure::usgeocoder.path')]" config-ref="HTTP_US_Geo_Coder_Request_configuration">
+			<http:query-params ><![CDATA[#[%dw 2.0
+output application/java
+import * from dw::core::URL
+---
+{
+	"authkey":Mule::p('secure::usgeocoder.authkey'),
+	"address":if(!isEmpty(attributes.queryParams.address)) encodeURI(attributes.queryParams.address) else "",
+	"zipcode":attributes.queryParams.zipCode,
+	"format": "json"
+}]]]></http:query-params>
+		</http:request>
+	</flow>
+</mule>
